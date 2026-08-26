@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SMIT AI Resume Agent</title>
+  <meta name="description" content="ATS-ready one-page campus resumes for SMIT CSE students. Created by Asst. Prof. Mukesh Kumar." />
+  <link rel="icon" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3f6fb; --surface: #fff; --muted-bg: #f8fafc;
+      --fg: #0f172a; --muted: #64748b; --subtle: #94a3b8;
+      --primary: #1d4ed8; --primary-hover: #1e40af; --primary-fg: #fff;
+      --soft: #eff4ff; --navy: #132a4a; --navy-fg: #f8fafc; --navy-muted: #c5d4e8;
+      --success: #0f766e; --success-soft: #ecfdf5; --border: #e2e8f0;
+      --danger: #b91c1c; --chip: #eef2ff;
+      --shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 8px 24px rgb(15 23 42 / 0.05);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: "IBM Plex Sans", system-ui, sans-serif; }
+    button, [role="button"] { cursor: pointer; font-family: inherit; }
+    a { color: var(--primary); }
+    header.top { background: var(--surface); border-bottom: 1px solid var(--border); }
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 16px 20px; }
+    .top-inner { display: flex; gap: 16px; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+    .brand { display: flex; gap: 12px; align-items: flex-start; }
+    .logo { width: 40px; height: 40px; border-radius: 8px; background: var(--primary); color: #fff; display: grid; place-items: center; font-weight: 700; }
+    h1 { margin: 0; font-size: 22px; color: var(--primary); }
+    .sub { margin: 2px 0 0; font-size: 13px; color: var(--muted); }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .chip { height: 40px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 0; }
+    .chip.green { background: var(--success-soft); color: var(--success); }
+    .chip.navy { background: var(--navy); color: var(--navy-fg); }
+    .chip.outline { background: #fff; border: 1px solid #cbd5e1; color: var(--fg); }
+    main { max-width: 1320px; margin: 0 auto; padding: 16px 20px 40px; display: grid; gap: 20px; }
+    @media (min-width: 980px) { main { grid-template-columns: 1fr 1.05fr; align-items: start; } }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 22px; box-shadow: var(--shadow); }
+    h2 { margin: 0; font-size: 20px; }
+    .lead { color: var(--muted); font-size: 14px; line-height: 1.55; }
+    .label { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .pill { height: 40px; border-radius: 999px; border: 1px solid var(--border); background: #fff; padding: 0 12px; font-size: 12px; font-weight: 500; }
+    .pill.on { border-color: var(--primary); background: var(--soft); color: var(--primary); }
+    .grid2 { display: grid; gap: 10px; }
+    @media (min-width: 640px) { .grid2 { grid-template-columns: 1fr 1fr; } }
+    input, textarea { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font: 14px/1.4 inherit; color: var(--fg); background: #fff; }
+    input:focus, textarea:focus { outline: 2px solid color-mix(in srgb, var(--primary) 25%, transparent); border-color: var(--primary); }
+    textarea { min-height: 76px; resize: vertical; }
+    .hp { font-size: 10px; font-weight: 700; color: var(--primary); background: var(--chip); border-radius: 999px; padding: 3px 8px; }
+    .btn { height: 40px; border: 0; border-radius: 8px; padding: 0 14px; font-weight: 600; font-size: 13px; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: #fff; border: 1px solid #cbd5e1; width: 100%; }
+    .btn-sm { height: 36px; }
+    .proj { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: var(--muted-bg); margin-bottom: 10px; }
+    .preview-head { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+    .live { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .dot { width: 8px; height: 8px; border-radius: 99px; background: var(--primary); }
+    #sheet { min-height: 560px; border: 1px dashed #cbd5e1; border-radius: 18px; background: #fff; padding: 28px 32px; box-shadow: var(--shadow); }
+    .empty { min-height: 480px; display: grid; place-items: center; text-align: center; color: var(--muted); }
+    .resume h2.name { text-align: center; letter-spacing: .04em; font-size: 22px; margin: 0; }
+    .role { text-align: center; color: var(--primary); font-size: 13px; font-weight: 600; margin: 4px 0; }
+    .contacts { text-align: center; font-size: 12px; color: #334155; }
+    .sec { margin-top: 14px; }
+    .sec h3 { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; border-bottom: 1px solid #0f172a; padding-bottom: 3px; margin: 0 0 8px; }
+    .sec p, .sec li { font-size: 12.5px; line-height: 1.4; margin: 0; }
+    .sec ul { margin: 4px 0 0 18px; padding: 0; }
+    .side { display: grid; gap: 12px; margin-top: 14px; }
+    @media (min-width: 720px) { .side.two { grid-template-columns: 1fr 1fr; } }
+    .navy-card { background: var(--navy); color: var(--navy-fg); border-radius: 18px; padding: 20px; }
+    .ok { color: var(--success); }
+    .modal { position: fixed; inset: 0; background: rgb(15 23 42 / .4); display: none; place-items: center; padding: 16px; z-index: 20; }
+    .modal.on { display: grid; }
+    .modal .box { background: #fff; max-width: 520px; width: 100%; border-radius: 16px; padding: 22px; }
+    @media print {
+      body * { visibility: hidden; }
+      #sheet, #sheet * { visibility: visible; }
+      #sheet { position: absolute; left: 0; top: 0; width: 100%; border: 0; box-shadow: none; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top no-print">
+    <div class="wrap top-inner">
+      <div class="brand">
+        <div class="logo">R</div>
+        <div>
+          <h1>SMIT AI Resume Agent</h1>
+          <p class="sub">Created by <strong>Asst. Prof. Mukesh Kumar</strong> · CSE Department, SMIT</p>
+        </div>
+      </div>
+      <div class="chips">
+        <button class="chip outline" type="button" onclick="document.getElementById('guide').classList.add('on')">How to Use / Student Guide</button>
+        <span class="chip green">ATS 1-Page</span>
+        <span class="chip navy">SMIT CSE</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="card no-print">
+      <h2>Welcome Student</h2>
+      <p class="lead">Welcome to SMIT AI Resume Agent — created by <strong>Asst. Prof. Mukesh Kumar</strong> for SMIT students. Enter your details below to build your career.</p>
+      <div class="label">Quick Track Templates</div>
+      <div class="row">
+        <button class="pill" id="t-sde" type="button" onclick="track('sde')">SDE / Full Stack</button>
+        <button class="pill" id="t-ai" type="button" onclick="track('ai')">AI & Data Science</button>
+        <button class="pill" id="t-cloud" type="button" onclick="track('cloud')">Cloud / DevOps</button>
+        <button class="pill" type="button" onclick="clearAll()">Clear</button>
+      </div>
+      <div class="label">1. Personal & Contact Info</div>
+      <div class="grid2">
+        <input id="fullName" placeholder="Full Name (e.g. Rohan Sengupta) *" />
+        <input id="targetRole" placeholder="Target Role (e.g. SDE Intern) *" />
+        <input id="email" placeholder="Email" />
+        <input id="phone" placeholder="Phone" />
+        <input id="linkedin" placeholder="LinkedIn URL" />
+        <input id="github" placeholder="GitHub URL" />
+        <input id="leetcode" placeholder="LeetCode URL" />
+        <input id="location" placeholder="Location" />
+      </div>
+      <div class="label">2. Education & CGPA</div>
+      <textarea id="education"></textarea>
+      <div class="label" style="display:flex;justify-content:space-between;align-items:center">
+        3. Technical Skills * <span class="hp">HIGH PRIORITY</span>
+      </div>
+      <textarea id="skills" placeholder="Languages: ...&#10;Frameworks: ...&#10;Tools: ..."></textarea>
+      <div class="label">4. Projects (projects first)</div>
+      <div id="projects"></div>
+      <div class="label">5. Experience / Internships</div>
+      <div id="experience"></div>
+      <div class="label">6. Achievements & certifications</div>
+      <textarea id="achievements" placeholder="Hackathons, NPTEL, AWS — one per line"></textarea>
+      <div class="label">7. Additional notes</div>
+      <textarea id="extra"></textarea>
+      <div style="margin-top:16px">
+        <button class="btn btn-outline" type="button" onclick="loadSample()">Load Sample Profile</button>
+      </div>
+    </section>
+
+    <section>
+      <div class="preview-head no-print">
+        <div class="live"><span class="dot"></span> Live ATS Resume Preview</div>
+        <button class="btn btn-primary btn-sm" type="button" onclick="window.print()">Print 1-Page PDF</button>
+      </div>
+      <article id="sheet"></article>
+      <div class="side two no-print">
+        <div class="card" style="border-radius:18px;padding:20px">
+          <strong>Placement ATS Standards</strong>
+          <p class="lead ok">Zero Hallucination: Uses only verified student input.</p>
+          <p class="lead ok">STAR Bullets: Action Verb + Task + Impact.</p>
+          <p class="lead ok">Projects First: Prioritizes tech builds for placements.</p>
+        </div>
+        <div class="navy-card">
+          <strong>Asst. Prof. Mukesh Kumar's Advice</strong>
+          <p style="line-height:1.55;font-size:14px">“Always align your top technical projects directly with the target job role and state your tech stack explicitly for campus placement drives.”</p>
+          <p style="opacity:.75;font-size:12px;border-top:1px solid rgb(255 255 255 / .15);padding-top:10px">Department of CSE, SMIT</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="guide" class="modal no-print" onclick="if(event.target===this) this.classList.remove('on')">
+    <div class="box">
+      <h2>Student Guide</h2>
+      <p class="lead">This agent builds a one-page ATS resume from your own facts. It will not invent internships or tools.</p>
+      <p class="lead"><strong>1.</strong> Pick a track so skills match the drive.</p>
+      <p class="lead"><strong>2.</strong> Projects first — three strong builds beat six weak ones.</p>
+      <p class="lead"><strong>3.</strong> STAR bullets: verb + task + impact.</p>
+      <p class="lead"><strong>4.</strong> Print → Save as PDF, keep it to one A4 page.</p>
+      <button class="btn btn-primary" type="button" onclick="document.getElementById('guide').classList.remove('on')">Got it</button>
+    </div>
+  </div>
+
+  <script>
+    const KEY = "smit-ai-resume-agent-gh";
+    const empty = () => ({
+      fullName: "", targetRole: "", email: "", phone: "", linkedin: "", github: "", leetcode: "",
+      location: "Chennai, India",
+      education: "B.Tech in Computer Science & Engineering | Sikkim Manipal Institute of Technology (SMIT) | 2022 - 2026 | CGPA: ",
+      skills: "",
+      projects: [{title:"",tech:"",bullets:"",link:""},{title:"",tech:"",bullets:"",link:""},{title:"",tech:"",bullets:"",link:""}],
+      experience: [{role:"",org:"",dates:"",bullets:""}],
+      achievements: "", extra: ""
+    });
+    const SAMPLE = {
+      fullName: "Rohan Sengupta", targetRole: "SDE Intern", email: "rohan.smit@gmail.com",
+      phone: "+91 98765 43210", linkedin: "https://linkedin.com/in/rohansengupta",
+      github: "https://github.com/rohansengupta", leetcode: "https://leetcode.com/rohansengupta",
+      location: "Chennai, India",
+      education: "B.Tech in Computer Science & Engineering | Sikkim Manipal Institute of Technology (SMIT) | 2022 - 2026 | CGPA: 8.74",
+      skills: "Languages: C++, Java, Python, JavaScript, TypeScript, SQL\nFrameworks: React.js, Node.js, Express, Tailwind CSS\nTools: Git, GitHub, Docker, AWS (EC2, S3), MongoDB, PostgreSQL, REST APIs, Postman",
+      projects: [
+        {title:"Smart Campus Attendance System", tech:"React, Node.js, Express, MongoDB, Tailwind CSS", bullets:"Built a full-stack web app with QR-code check-in and a faculty analytics dashboard.\nCut manual attendance marking time by ~70% for 4 lab sections.\nDesigned REST APIs and role-based access for students and faculty.", link:"https://github.com/rohansengupta/smart-attendance"},
+        {title:"AI-Powered Resume Analyzer", tech:"Python, Flask, React, spaCy, scikit-learn", bullets:"Scored student resumes against job descriptions using NLP keyword matching.\nShipped a React UI with instant match reports for campus placement prep.\nImproved keyword coverage of sample resumes from 42% to 81% after iteration.", link:"https://github.com/rohansengupta/ai-resume-analyzer"},
+        {title:"Real-time Collaborative Code Editor", tech:"React, Node.js, Socket.io, Monaco Editor", bullets:"Created a multi-user editor with live cursors, syntax highlighting, and preview.\nHandled concurrent edits over WebSockets with room-based sessions.\nUsed by 30+ classmates during a 48-hour hackathon.", link:"https://github.com/rohansengupta/collab-code-editor"}
+      ],
+      experience: [
+        {role:"Software Development Intern", org:"TechNova Solutions", dates:"May 2025 – July 2025", bullets:"Shipped REST APIs in Node.js and Express used by the intern product squad.\nPartnered with frontend to integrate React views with backend services.\nOptimized database queries and reduced API p95 response time by 35%."},
+        {role:"Teaching Assistant — Data Structures", org:"CSE Department, SMIT", dates:"Aug 2024 – Dec 2024", bullets:"Ran weekly labs for 60+ students on arrays, trees, and graphs.\nDebugged assignments and published sample solutions after each lab."}
+      ],
+      achievements: "Winner — SMIT Hackathon 2025 (AI Track)\nSmart India Hackathon 2024 — Finalist\nAWS Cloud Practitioner Certified\nNPTEL Data Structures & Algorithms (Elite + Silver)",
+      extra: "Open to internships for 2026 campus placements."
+    };
+    const TRACKS = {
+      sde: { targetRole: "SDE Intern", skills: "Languages: C++, Java, Python, JavaScript, TypeScript, SQL\nFrameworks: React.js, Node.js, Express, Next.js, Tailwind CSS\nTools: Git, GitHub, Docker, REST APIs, MongoDB, PostgreSQL, Postman" },
+      ai: { targetRole: "AI / Data Science Intern", skills: "Languages: Python, SQL, C++, Java\nML: scikit-learn, PyTorch, Pandas, NumPy, spaCy\nTools: Jupyter, Git, Streamlit, Flask, REST APIs, AWS S3" },
+      cloud: { targetRole: "Cloud / DevOps Intern", skills: "Languages: Python, Bash, JavaScript, SQL\nCloud: AWS (EC2, S3, IAM, Lambda), Docker, Linux\nTools: Git, GitHub Actions, Nginx, Terraform basics, Prometheus" }
+    };
+    let data = empty();
+    const $ = (id) => document.getElementById(id);
+    const lines = (t) => (t||"").split(/\n+/).map(s=>s.replace(/^[\s•\-*]+/,"").trim()).filter(Boolean);
+    function bind() {
+      ["fullName","targetRole","email","phone","linkedin","github","leetcode","location","education","skills","achievements","extra"].forEach(k => {
+        $(k).value = data[k] || "";
+        $(k).oninput = () => { data[k] = $(k).value; save(); render(); };
+      });
+      $("projects").innerHTML = data.projects.map((p,i)=>`
+        <div class="proj">
+          <input placeholder="Title" value="${esc(p.title)}" oninput="data.projects[${i}].title=this.value;save();render()" />
+          <input placeholder="Tech stack" value="${esc(p.tech)}" oninput="data.projects[${i}].tech=this.value;save();render()" style="margin-top:8px" />
+          <input placeholder="GitHub / live link" value="${esc(p.link)}" oninput="data.projects[${i}].link=this.value;save();render()" style="margin-top:8px" />
+          <textarea placeholder="STAR bullets — one per line" oninput="data.projects[${i}].bullets=this.value;save();render()" style="margin-top:8px">${esc(p.bullets)}</textarea>
+        </div>`).join("");
+      $("experience").innerHTML = data.experience.map((e,i)=>`
+        <div class="proj">
+          <input placeholder="Role" value="${esc(e.role)}" oninput="data.experience[${i}].role=this.value;save();render()" />
+          <div class="grid2" style="margin-top:8px">
+            <input placeholder="Organization" value="${esc(e.org)}" oninput="data.experience[${i}].org=this.value;save();render()" />
+            <input placeholder="Dates" value="${esc(e.dates)}" oninput="data.experience[${i}].dates=this.value;save();render()" />
+          </div>
+          <textarea placeholder="STAR bullets — one per line" oninput="data.experience[${i}].bullets=this.value;save();render()" style="margin-top:8px">${esc(e.bullets)}</textarea>
+        </div>`).join("");
+    }
+    function esc(s){ return String(s||"").replace(/[&<>"']/g, c=>({"&":"&","<":"<",">":">",'"':""","'":"&#39;"}[c])); }
+    function bullets(t){ return lines(t).map(l=>`<li>${esc(l)}</li>`).join(""); }
+    function render(){
+      const d = data;
+      const ready = d.fullName.trim() && d.targetRole.trim() && d.skills.trim();
+      if (!ready) {
+        $("sheet").innerHTML = `<div class="empty"><div><strong style="color:var(--fg);font-size:16px">Resume Preview Will Appear Here</strong><p>Fill your details on the left, or click Load Sample Profile.</p></div></div>`;
+        return;
+      }
+      const contacts = [d.email,d.phone,d.location,d.linkedin?"LinkedIn":"",d.github?"GitHub":"",d.leetcode?"LeetCode":""].filter(Boolean);
+      const href = { LinkedIn:d.linkedin, GitHub:d.github, LeetCode:d.leetcode };
+      $("sheet").innerHTML = `<div class="resume">
+        <h2 class="name">${esc(d.fullName).toUpperCase()}</h2>
+        <div class="role">${esc(d.targetRole)}</div>
+        <div class="contacts">${contacts.map(c => href[c]?`<a href="${esc(href[c])}">${c}</a>`:esc(c)).join(" · ")}</div>
+        ${d.education.trim()?`<div class="sec"><h3>Education</h3><p>${esc(d.education)}</p></div>`:""}
+        <div class="sec"><h3>Technical Skills</h3>${lines(d.skills).map(l=>`<p>${esc(l)}</p>`).join("")}</div>
+        ${d.projects.some(p=>p.title.trim())?`<div class="sec"><h3>Projects</h3>${d.projects.filter(p=>p.title.trim()).map(p=>`<p><strong>${esc(p.title)}</strong>${p.tech?` — ${esc(p.tech)}`:""}</p><ul>${bullets(p.bullets)}</ul>`).join("")}</div>`:""}
+        ${d.experience.some(e=>e.role.trim())?`<div class="sec"><h3>Experience</h3>${d.experience.filter(e=>e.role.trim()).map(e=>`<p><strong>${esc(e.role)}</strong>${e.org?" — "+esc(e.org):""} ${e.dates?`<span style="color:var(--muted)">${esc(e.dates)}</span>`:""}</p><ul>${bullets(e.bullets)}</ul>`).join("")}</div>`:""}
+        ${d.achievements.trim()?`<div class="sec"><h3>Achievements</h3><ul>${bullets(d.achievements)}</ul></div>`:""}
+        ${d.extra.trim()?`<div class="sec"><h3>Additional</h3><p>${esc(d.extra)}</p></div>`:""}
+      </div>`;
+    }
+    function save(){ localStorage.setItem(KEY, JSON.stringify(data)); }
+    function loadSample(){ data = JSON.parse(JSON.stringify(SAMPLE)); bind(); save(); render(); }
+    function clearAll(){ data = empty(); bind(); save(); render(); document.querySelectorAll(".pill.on").forEach(el=>el.classList.remove("on")); }
+    function track(id){
+      Object.assign(data, TRACKS[id]); bind(); save(); render();
+      document.querySelectorAll(".pill").forEach(el=>el.classList.remove("on"));
+      document.getElementById("t-"+id).classList.add("on");
+    }
+    try { const raw = localStorage.getItem(KEY); if (raw) data = Object.assign(empty(), JSON.parse(raw)); } catch(e){}
+    bind(); render();
+  </script>
+</body>
+</html>
