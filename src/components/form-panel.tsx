@@ -38,7 +38,7 @@ export function FormPanel() {
     <div className="rounded-[22px] border border-border bg-surface p-5 shadow-card sm:p-6">
       <h2 className="text-xl font-semibold tracking-tight">Welcome Student</h2>
       <p className="mt-1 text-sm leading-relaxed text-muted">
-        Welcome to SMIT AI Resume Agent — created by{" "}
+        Welcome to AI Resume Agent — created by{" "}
         <span className="font-semibold text-fg">Asst. Prof. Mukesh Kumar</span> for SMIT
         students. Enter your details below to build your career.
       </p>
