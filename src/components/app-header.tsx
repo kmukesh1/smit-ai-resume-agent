@@ -11,7 +11,7 @@ export function AppHeader({ onGuide }: { onGuide: () => void }) {
           </div>
           <div>
             <h1 className="text-xl font-semibold tracking-tight text-primary sm:text-2xl">
-              SMIT AI Resume Agent
+              AI Resume Agent
             </h1>
             <p className="text-xs text-muted sm:text-sm">
               Created by <span className="font-semibold text-fg">Asst. Prof. Mukesh Kumar</span>

@@ -1,4 +1,4 @@
-# SMIT AI Resume Agent
+# AI Resume Agent
 
 ATS-ready one-page campus resume builder for **SMIT CSE** students.
 
